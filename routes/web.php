@@ -103,3 +103,5 @@ Route::post('usuario/upload', 'UserController@upload')->middleware(ApiAuthMiddle
 Route::get('usuario/avatar/{filename}', 'UserController@getImage');
 Route::get('usuario/detail/{id}', 'UserController@detail');
 Route::delete('users/{id}','UserController@delete');
+
+

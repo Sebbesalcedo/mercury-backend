@@ -44,7 +44,7 @@ class TidentificacionController extends Controller
             $dt = [
                 'code' => 200,
                 'status' => 'success',
-                'tipo' => $data
+                'data' => $data
             ];
         } else {
             $dt = [
@@ -173,7 +173,7 @@ class TidentificacionController extends Controller
 
         $element = Tipo_identificacion::find($id);
         if (!empty($element) &&   $checkToken) {
-            
+
             $user = $jwtAuth->checkToken($token, true);
             //Borrarlo
 

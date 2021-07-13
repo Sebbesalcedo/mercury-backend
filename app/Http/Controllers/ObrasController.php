@@ -23,7 +23,7 @@ class ObrasController extends Controller
 
             'code'      => 200,
             'status'    => 'success',
-            'data'  => $data
+            'data'      => $data
 
         ]);
     }
@@ -61,14 +61,14 @@ class ObrasController extends Controller
         $params = json_decode($json);
         $params_array = json_decode($json, true);
 
-     
+
         if (!empty($params_array)) {
 
             $validate =  \Validator::make($params_array, [
 
-                'nombre'        => 'required',
-                'tamano'        => 'required',
-                'usuario_id'       => 'required',
+                'id_proyecto'      => 'required',
+                'id_tipo_obra'     => 'required',
+                'id_user'       => 'required',
                 'valor_unidad'  => 'required',
                 'direccion'     => 'required'
             ]);
@@ -86,22 +86,22 @@ class ObrasController extends Controller
 
                 $dt = new Obras();
 
-                $dt->nombre         = $params_array['nombre'];
-                $dt->cantidad       = $params_array['cantidad'];
-                $dt->tamano         = $params_array['tamano'];
+                $dt->id_proyecto    = $params_array['id_proyecto'];
+                $dt->id_tipo_obra   = $params_array['id_tipo_obra'];
+                $dt->id_user        = $params_array['id_user'];
+                $dt->dimesiones     = $params_array['dimensiones'];
                 $dt->habitaciones   = $params_array['habitaciones'];
                 $dt->banos          = $params_array['banos'];
                 $dt->parqueadero    = $params_array['parqueadero'];
                 $dt->valor_unidad   = $params_array['valor_unidad'];
-                $dt->usuario_id        = $params_array['usuario_id'];
-                $dt->direccion      = $params_array['direccion'];
                 $dt->descripcion    = $params_array['descripcion'];
 
                 $dt->save();
+
                 $data = [
                     'code' => 200,
                     'status' => 'success',
-                    'message' => ' datos correctacmiente',
+                    'message' => 'Creado correctamente la obra',
                     'obra' => $dt
                 ];
             }
@@ -125,11 +125,11 @@ class ObrasController extends Controller
             $validate = \Validator::make($params_array, [
 
 
-                'nombre'   => 'required',
-                'tamano'   => 'required',
-                'usuario_id'  => 'required',
-                'direccion' => 'required'
-
+                'id_proyecto'      => 'required',
+                'id_tipo_obra'     => 'required',
+                'id_user'       => 'required',
+                'valor_unidad'  => 'required',
+                'direccion'     => 'required'
 
             ]);
             if ($validate->fails()) {

@@ -21,7 +21,7 @@ class MedidaController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'medida' => $medida
+            'data' => $medida
         ]);
     }
 
@@ -92,7 +92,7 @@ class MedidaController extends Controller
             $data = array(
                 'code' => 200,
                 'status' => 'success',
-                'medida' => $medida
+                'data' => $medida
             );
         } else {
             $data = array(
@@ -128,7 +128,7 @@ class MedidaController extends Controller
                     'code'      => 400,
                     'status'    => 'error',
                     'mensaje'   => 'Se ha encontrado un error',
-                    'error'   => $validate->fails()
+                    'error'   => $validate->errors()
 
                 ];
             } else {
