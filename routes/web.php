@@ -21,11 +21,6 @@ Route::get('/', function () {
 });
 
 
-
-
-
-
-
 //--------------------------------
 //Rutas  del modulo de inventario
 //--------------------------------
@@ -38,9 +33,7 @@ Route::resource('estados/proyecto', 'estadoProyectoController');
 Route::resource('proyectos', 'proyectoController');
 
 Route::resource('obras', 'ObrasController');
-
-
-
+Route::resource('obra/tipo_obra', 'tipo_obraController');
 
 //--------------------------------------------------------------------
 
@@ -61,20 +54,14 @@ Route::resource('tareas', 'TareasController');
 Route::resource('estado/tarea', 'Estado_tareaController');
 
 
-
 //--------------------------------------------------------------------
 //Rutas  del modulo de cotizaciones
 //--------------------------------------------------------------------
 
 
-
 Route::resource('cotizaciones', 'cotizacionesController');
 Route::resource('fechaPagos/Cotizaciones', 'fechaPagosCotizacionController');
 Route::resource('estados/Cotizacion', 'estadoCotizacionController');
-
-
-
-
 
 // Route::resource('estados/FechaPago', 'estadoFechaPagosController');
 
@@ -103,5 +90,3 @@ Route::post('usuario/upload', 'UserController@upload')->middleware(ApiAuthMiddle
 Route::get('usuario/avatar/{filename}', 'UserController@getImage');
 Route::get('usuario/detail/{id}', 'UserController@detail');
 Route::delete('users/{id}','UserController@delete');
-
-

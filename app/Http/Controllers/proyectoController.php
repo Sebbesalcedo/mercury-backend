@@ -10,7 +10,7 @@ class proyectoController extends Controller
 
     public function __construct()
     {
-        $this->middleware('api.auth', ['except' => []]);
+        $this->middleware('api.auth', ['except' => ['']]);
     }
 
     /**
