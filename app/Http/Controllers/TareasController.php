@@ -15,7 +15,7 @@ class TareasController extends Controller
 
     public function index()
     {
-        $data = Tareas::all()->load('id_estado','cliente','id_user','oportunidad_venta');
+        $data = Tareas::all()->load('id_estado','cliente','id_user');
         return response()->json([
 
             'code'      => 200,
@@ -79,8 +79,8 @@ class TareasController extends Controller
 
 
                 $dt = new Tareas();
-                
-                $dt->oportunidad_venta  = $params_array['oportunidad_venta'];
+
+
                 $dt->tarea              = $params_array['tarea'];
                 $dt->fecha_recordatorio = $params_array['fecha_recordatorio'];
                 $dt->id_user            = $params_array['id_user'];
@@ -145,7 +145,7 @@ class TareasController extends Controller
 
                     'code'      => 200,
                     'status'    => 'success',
-                    'mensaje'   => 'Dato actualizado con exito.',
+                    'mensaje'   => 'Dato actualizado con éxito.',
                     'changes'   => $params_array
 
                 ];

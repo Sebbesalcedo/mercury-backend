@@ -14,7 +14,7 @@ class Clientes extends Model
 
     public function tipo_iden()
     {
-        return $this->belongsTo('App\tipo_identificacion','tipo_iden');
+        return $this->belongsTo('App\Tipo_identificacion','tipo_iden');
     }
 
      public function tarea()
@@ -24,7 +24,7 @@ class Clientes extends Model
 
      public function clienteCotizacion()
     {
-      return $this->hasMany('App\cotizaciones');   
+      return $this->hasMany('App\cotizaciones');
     }
 
     public function id_n_estudio()

@@ -14,17 +14,13 @@ class Tareas extends Model
     }
     public function cliente()
     {
-        return $this->belongsTo('App\Clientes', 'op_venta
-        ');
+        return $this->belongsTo('App\Clientes', 'op_venta');
     }
 
     public function id_estado()
     {
         return $this->belongsTo('App\estado_tarea', 'id_estado');
     }
-    public function oportunidad_venta(){
 
-        return $this->belongsTo('App\Oportunidad_venta', 'oportunidad_venta');
-    }
-     
+
 }

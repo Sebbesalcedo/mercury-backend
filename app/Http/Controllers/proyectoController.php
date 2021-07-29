@@ -20,7 +20,7 @@ class proyectoController extends Controller
      */
     public function index()
     {
-        $data = proyecto::all()->load('id_estado');
+        $data = proyecto::all()->load('id_estado','id_user');
 
         return response()->json([
 
@@ -56,7 +56,7 @@ class proyectoController extends Controller
 
             $validate = \Validator::make($params_array, [
 
-                'nombre'    => 'required|nombre|unique:proyectos',
+                'nombre'    => 'required',
                 'id_user'   => 'required',
                 'id_estado' => 'required',
                 'direccion' => 'required'
@@ -73,6 +73,7 @@ class proyectoController extends Controller
                     'error'     => $validate->errors()
 
                 ];
+                return response()->json($data, $data['code']);
             } else {
 
                 $dt = new proyecto();

@@ -8,14 +8,28 @@ class proyecto extends Model
 {
     protected $table = 'proyectos';
 
-    public function oportunidad_venta()
-    {
-        return $this->hasMany('App\Oportunidad_venta');
-    }
+    /**
+     * Relacion de muchos a uno con la tabla estado_proyecto
+     */
 
     public function id_estado()
     {
         return $this->belongsTo('App\estadoProyecto','id_estado');
+    }
+
+    public function id_user()
+    {
+        return $this->belongsTo('App\User','id_user');
+    }
+
+
+    /**
+     * Relacion de uno a muchos con la tabla torre
+     */
+
+    public function torre()
+    {
+        return $this->hasMany('App\Torre');
     }
 
 }

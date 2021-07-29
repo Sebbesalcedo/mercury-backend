@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Clientes;
-
+use Validator;
 class ClientesController extends Controller
 {
     public function __construct()
@@ -62,7 +62,7 @@ class ClientesController extends Controller
 
                 'nombre'             => 'required',
                 'tipo_iden'          => 'required',
-                'num_identificacion' => 'required|num_identificacion|unique:clientes',
+                'num_identificacion' => 'required|unique:clientes',
                 'fecha_nacimiento'   =>  'required',
                 'id_n_estudio'       =>  'required',
                 'profesion'          => 'required',
@@ -77,10 +77,13 @@ class ClientesController extends Controller
 
                     'code'      => 400,
                     'status'    => 'error',
-                    'mensaje'   => 'No se ha podido guardar la nueva categoria',
+                    'mensaje'   => 'No se ha podido guardar el nuevo cliente',
                     'error'     => $validate->errors()
 
                 ];
+
+                return response()->json($data, $data['code']);
+
             } else {
 
                 $dt = new  Clientes();
@@ -89,7 +92,7 @@ class ClientesController extends Controller
                 $dt->tipo_iden          = $params_array['tipo_iden'];
                 $dt->num_identificacion = $params_array['num_identificacion'];
                 $dt->fecha_nacimiento   = $params_array['fecha_nacimiento'];
-                $dt->id_n_estudio       = $params_array['id_n_estudio '];
+                $dt->id_n_estudio       = $params_array['id_n_estudio'];
                 $dt->profesion          = $params_array['profesion'];
                 $dt->contacto1          = $params_array['contacto1'];
                 $dt->contacto2          = $params_array['contacto2'];

@@ -16,7 +16,7 @@ class Oportunidad_ventaController extends Controller
     {
 
 
-        $data = Oportunidad_venta::all()->load('cliente_id', 'obra_id', 'estado_id', 'proyecto_id');
+        $data = Oportunidad_venta::all()->load('cliente_id', 'inmueble_id', 'estado_id');
 
 
         return response()->json([
@@ -65,13 +65,13 @@ class Oportunidad_ventaController extends Controller
             $validate = \Validator::make($params_array, [
 
                 'cliente_id'    =>  'required',
-                'proyecto_id'   =>  'required',
-                'obra_id'       =>  'required',
+                'inmueble_id'       =>  'required',
                 'id_user'       =>  'required',
-                'estado_id'     =>  'required',
                 'cantidad'      =>  'required',
                 'valor_compra'  =>  'required',
-                'fecha_cierre'  =>  'required'
+                'fecha_cierre'  =>  'required',
+                'estado_id'     =>  'required'
+
 
 
             ]);
@@ -90,13 +90,12 @@ class Oportunidad_ventaController extends Controller
 
                 $dt = new Oportunidad_venta();
                 $dt->cliente_id   = $params_array['cliente_id'];
-                $dt->proyecto_id  = $params_array['proyecto_id'];
-                $dt->obra_id      = $params_array['obra_id'];
+                $dt->inmueble_id      = $params_array['inmueble_id '];
                 $dt->id_user      = $params_array['id_user'];
-                $dt->estado_id    = $params_array['estado_id'];
                 $dt->cantidad     = $params_array['cantidad'];
                 $dt->valor_compra = $params_array['valor_compra'];
                 $dt->fecha_cierre = $params_array['fecha_cierre'];
+                $dt->estado_id    = $params_array['estado_id'];
                 $dt->descripcion  = $params_array['descripcion'];
                 $dt->save();
 
@@ -104,7 +103,7 @@ class Oportunidad_ventaController extends Controller
                     'code' => 200,
                     'status' => 'success',
                     'mensaje' => 'Se ha guardado el dato!!!',
-                    'dato' => $dt->valor_compra
+                    'dato' => $dt
 
                 ];
             }
@@ -134,13 +133,12 @@ class Oportunidad_ventaController extends Controller
 
 
                 'cliente_id'    =>  'required',
-                'proyecto_id'   =>  'required',
-                'obra_id'       =>  'required',
+                'inmueble_id'       =>  'required',
                 'id_user'       =>  'required',
-                'estado_id'     =>  'required',
                 'cantidad'      =>  'required',
                 'valor_compra'  =>  'required',
-                'fecha_cierre'  =>  'required'
+                'fecha_cierre'  =>  'required',
+                'estado_id'     =>  'required'
 
 
             ]);
@@ -156,8 +154,7 @@ class Oportunidad_ventaController extends Controller
             }
             unset($params_array['id']);
             unset($params_array['cliente_id']);
-            unset($params_array['estado_id']);
-            unset($params_array['id_user']);
+             unset($params_array['id_user']);
             unset($params_array['created_at']);
 
             $dt = Oportunidad_Venta::where('id', $id);
@@ -179,7 +176,7 @@ class Oportunidad_ventaController extends Controller
                     'code' => 400,
                     'status' => 'error',
                     'message' => 'Datos enviados incorrectamente',
-                    'post' => $params_array
+                    'data' => $params_array
                 ];
             }
         }

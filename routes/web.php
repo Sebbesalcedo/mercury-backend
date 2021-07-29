@@ -32,8 +32,15 @@ Route::resource('producto', 'productoController');
 Route::resource('estados/proyecto', 'estadoProyectoController');
 Route::resource('proyectos', 'proyectoController');
 
-Route::resource('obras', 'ObrasController');
-Route::resource('obra/tipo_obra', 'tipo_obraController');
+//-------------------------------
+//inventario inmueble
+//-------------------------------
+
+Route::resource('inmueble', 'InmuebleController');
+Route::resource('inmueble/tipo_inmueble', 'tipo_inmuebleController');
+
+
+Route::resource('torre', 'TorreController');
 
 //--------------------------------------------------------------------
 
@@ -52,6 +59,11 @@ Route::resource('cliente', 'ClientesController');
 // rutas del controlador de tareas
 Route::resource('tareas', 'TareasController');
 Route::resource('estado/tarea', 'Estado_tareaController');
+
+
+// Rutas del controlador nivel de estudios
+
+Route::resource('nivelEstudios', 'nivelEstudiosController');
 
 
 //--------------------------------------------------------------------

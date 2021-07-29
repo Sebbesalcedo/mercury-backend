@@ -13,21 +13,21 @@ class Oportunidad_venta extends Model
 
 
     /**
-     * 
+     *
      */
     public function cliente_id(){
         return $this->belongsTo('App\Clientes','cliente_id');
     }
     /**
-     * 
+     *
      */
-    public function obra_id()
+    public function inmueble_id()
     {
-        return $this->belongsTo('App\Obras','obra_id');
+        return $this->belongsTo('App\Obras','inmueble_id');
     }
 
     /**
-     * 
+     *
      */
 
     public function estado_id()
@@ -35,36 +35,12 @@ class Oportunidad_venta extends Model
         return $this->belongsTo('App\Estado_Op','estado_id');
     }
 
-    /**
-     * 
-     */
-    public function proyecto_id()
-    {
-        return $this->belongsTo('App\proyecto','proyecto_id');
-    }
-   
+
 
     //-----------Relaciónes de uno a muchos--------------------
 
     /**
-     * 
-     */
-     public function tareas()
-    {
-        return $this->hasMany('App\Tareas');
-    }
-    
-    /**
-     * 
-     */
-
-    public function op_venta()
-    {          
-        return $this->hasMany('App\Tareas');
-    }
-
-    /**
-     * 
+     *
      */
     public function op_venta_cotizacion()
     {
