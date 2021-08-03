@@ -9,14 +9,17 @@ class InmuebleController extends Controller
     public function __construct()
     {
 
-        $this->middleware('api.auth', ['except' => []]);
+        $this->middleware('api.auth', ['except' => ['filtroInmuebles']]);
     }
+
+
+    // get
 
     public function index()
     {
 
 
-        $data = Inmueble::all();
+        $data = Inmueble::all()->load('id_tipo_inmueble','id_torre','id_proyecto');
 
 
         return response()->json([
@@ -28,6 +31,7 @@ class InmuebleController extends Controller
         ]);
     }
 
+    //consultar un elemento
 
     public function show($id)
     {
@@ -54,6 +58,8 @@ class InmuebleController extends Controller
         return response()->json($data, $data['code']);
     }
 
+    // post
+
     public function store(Request $request)
     {
 
@@ -65,9 +71,9 @@ class InmuebleController extends Controller
 
             $validate =  \Validator::make($params_array, [
 
-                'id_proyecto'      => 'required',
+                'id_proyecto'               => 'required',
                 'id_tipo_inmueble'     => 'required',
-                'id_user'       => 'required',
+                'id_user'               => 'required',
                 'valor_unitario'  => 'required',
 
             ]);
@@ -85,17 +91,17 @@ class InmuebleController extends Controller
 
                 $dt = new Inmueble();
 
-                $dt->id_proyecto    = $params_array['id_proyecto'];
-                $dt->id_tipo_inmueble   = $params_array['id_tipo_inmueble'];
-                $dt->id_user        = $params_array['id_user'];
-                $dt->id_torre       = $params_array['id_torre'];
-                $dt->dimensiones     = $params_array['dimensiones'];
-                $dt->habitaciones   = $params_array['habitaciones'];
-                $dt->banos          = $params_array['banos'];
-                $dt->parqueadero    = $params_array['parqueadero'];
-                $dt->cantidad       = $params_array['cantidad'];
-                $dt->valor_unitario = $params_array['valor_unitario'];
-                $dt->descripcion    = $params_array['descripcion'];
+                $dt->id_proyecto        =   $params_array['id_proyecto'];
+                $dt->id_tipo_inmueble   =   $params_array['id_tipo_inmueble'];
+                $dt->id_user            =   $params_array['id_user'];
+                $dt->id_torre           =   $params_array['id_torre'];
+                $dt->dimensiones        =   $params_array['dimensiones'];
+                $dt->habitaciones       =   $params_array['habitaciones'];
+                $dt->banos              =   $params_array['banos'];
+                $dt->parqueadero        =   $params_array['parqueadero'];
+                $dt->cantidad           =   $params_array['cantidad'];
+                $dt->valor_unitario     =   $params_array['valor_unitario'];
+                $dt->descripcion        =   $params_array['descripcion'];
 
                 $dt->save();
 
@@ -115,6 +121,8 @@ class InmuebleController extends Controller
         }
         return response()->json($data, $data['code']);
     }
+
+    // update
 
     function update($id, Request $request)
     {
@@ -171,6 +179,8 @@ class InmuebleController extends Controller
         return response()->json($data, $data['code']);
     }
 
+    // delete
+
     public function destroy($id)
     {
         $dt = Inmueble::find($id);
@@ -195,5 +205,29 @@ class InmuebleController extends Controller
             ];
         }
         return response()->json($data, $data['code']);
+    }
+
+
+
+
+
+
+    /**
+     * Metodo que filtra los inmubles por proyecto
+     */
+    public function filtroInmuebles($idProyecto)
+    {
+
+        $data = Inmueble::all()->where('id_proyecto',$idProyecto)->load('id_tipo_inmueble','id_torre','id_proyecto');
+
+
+        return response()->json([
+
+            'code'      => 200,
+            'status'    => 'success',
+            'data'      => $data
+
+        ]);
+
     }
 }

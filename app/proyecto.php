@@ -32,4 +32,14 @@ class proyecto extends Model
         return $this->hasMany('App\Torre');
     }
 
+    /**
+     * Get all of the comments for the proyecto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inmueble()
+    {
+        return $this->hasMany( 'App\Inmueble');
+    }
+
 }

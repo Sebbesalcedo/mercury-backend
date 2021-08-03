@@ -19,4 +19,11 @@ class Torre extends Model
        return $this->belongsTo('App\user','id_user');
     }
 
+    //RELACION UNO AMUCHOS
+
+    public function inmueble()
+    {
+        return $this->hasMany('App\Inmueble');
+    }
+
 }

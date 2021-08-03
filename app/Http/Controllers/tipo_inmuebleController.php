@@ -67,7 +67,7 @@ class tipo_inmuebleController extends Controller
 
                     'code'  => 400,
                     'status' => 'error',
-                    'mensaje' => 'No se ha podido guardar el tipo de obra, por favor verifica los datos',
+                    'mensaje' => 'No se ha podido guardar el tipo de inmueble, por favor verifica los datos',
                     'error' =>  $validate->errors()
 
                 ];
@@ -87,6 +87,7 @@ class tipo_inmuebleController extends Controller
 
                 ];
             }
+
         } else {
 
             $data = [
@@ -116,7 +117,8 @@ class tipo_inmuebleController extends Controller
             $data = array([
 
                 'code'  => 200,
-                'status' => 'success'
+                'status' => 'success',
+                'data'  => $result
             ]);
         } else {
 

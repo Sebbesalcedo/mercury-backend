@@ -404,6 +404,8 @@ CONSTRAINT pk_tipo_obra  PRIMARY KEY (id)
 )ENGINE=INNODB;
 
 
+
+
 CREATE TABLE inmueble(
 
 id                  int (255) AUTO_INCREMENT NOT NULL,
@@ -428,3 +430,8 @@ CONSTRAINT fk_tipo_inmueble FOREIGN KEY (id_tipo_inmueble) REFERENCES  tipo_inmu
 CONSTRAINT fk_create    FOREIGN KEY (id_user) REFERENCES users(id)
 
 )ENGINE=INNODB;
+
+
+TODO: -- faltaaaa!!!!
+
+CREATE TABLE estado_inmueble()ENGINE=INNODB;

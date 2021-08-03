@@ -16,4 +16,7 @@ class tipo_inmueble extends Model
 
     }
 
+
+
+
 }

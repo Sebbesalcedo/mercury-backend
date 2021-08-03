@@ -36,9 +36,24 @@ Route::resource('proyectos', 'proyectoController');
 //inventario inmueble
 //-------------------------------
 
+
+
+
 Route::resource('inmueble', 'InmuebleController');
+
+
+
+
+
 Route::resource('inmueble/tipo_inmueble', 'tipo_inmuebleController');
 
+
+
+
+
+
+
+Route::post('filtroInmueble/{id}', 'InmuebleController@filtroInmuebles');
 
 Route::resource('torre', 'TorreController');
 
@@ -52,6 +67,8 @@ Route::resource('torre', 'TorreController');
 
 Route::resource('oportunidad_venta', 'Oportunidad_ventaController');
 Route::resource('estado/oportunidad', 'Estado_OpController');
+
+
 
 // Rutas del controlador de cliente
 Route::resource('cliente', 'ClientesController');

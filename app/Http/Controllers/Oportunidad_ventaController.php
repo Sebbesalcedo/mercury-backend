@@ -65,7 +65,7 @@ class Oportunidad_ventaController extends Controller
             $validate = \Validator::make($params_array, [
 
                 'cliente_id'    =>  'required',
-                'inmueble_id'       =>  'required',
+                'inmueble_id'   =>  'required',
                 'id_user'       =>  'required',
                 'cantidad'      =>  'required',
                 'valor_compra'  =>  'required',
@@ -90,7 +90,7 @@ class Oportunidad_ventaController extends Controller
 
                 $dt = new Oportunidad_venta();
                 $dt->cliente_id   = $params_array['cliente_id'];
-                $dt->inmueble_id      = $params_array['inmueble_id '];
+                $dt->inmueble_id      = $params_array['inmueble_id'];
                 $dt->id_user      = $params_array['id_user'];
                 $dt->cantidad     = $params_array['cantidad'];
                 $dt->valor_compra = $params_array['valor_compra'];
