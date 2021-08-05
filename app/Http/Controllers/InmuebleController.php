@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Inmueble;
+use Illuminate\Database\Eloquent\Collection;
+
 class InmuebleController extends Controller
 {
     public function __construct()
     {
 
-        $this->middleware('api.auth', ['except' => ['filtroInmuebles']]);
+        $this->middleware('api.auth', ['except' => ['filtroInmuebles', 'filtroInmueblesTipo']]);
     }
 
 
@@ -19,7 +21,7 @@ class InmuebleController extends Controller
     {
 
 
-        $data = Inmueble::all()->load('id_tipo_inmueble','id_torre','id_proyecto');
+        $data = Inmueble::all()->load('id_tipo_inmueble', 'id_torre', 'id_proyecto');
 
 
         return response()->json([
@@ -208,17 +210,13 @@ class InmuebleController extends Controller
     }
 
 
-
-
-
-
     /**
-     * Metodo que filtra los inmubles por proyecto
+     * Método que filtra los inmuebles por proyecto
      */
     public function filtroInmuebles($idProyecto)
     {
 
-        $data = Inmueble::all()->where('id_proyecto',$idProyecto)->load('id_tipo_inmueble','id_torre','id_proyecto');
+        $data = Inmueble::where('id_proyecto', $idProyecto)->get()->load('id_tipo_inmueble', 'id_torre', 'id_proyecto');
 
 
         return response()->json([
@@ -228,6 +226,23 @@ class InmuebleController extends Controller
             'data'      => $data
 
         ]);
+    }
 
+    /**
+     * Método que filtra los inmuebles por tipo de inmueble
+     */
+    public function filtroInmueblesTipo($tipo)
+    {
+
+        $data = Inmueble::where('id_tipo_inmueble', $tipo)->get()->load('id_tipo_inmueble', 'id_torre', 'id_proyecto');
+
+
+        return response()->json([
+
+            'code'      => 200,
+            'status'    => 'success',
+            'data'      => $data
+
+        ]);
     }
 }

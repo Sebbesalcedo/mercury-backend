@@ -37,23 +37,10 @@ Route::resource('proyectos', 'proyectoController');
 //-------------------------------
 
 
-
-
 Route::resource('inmueble', 'InmuebleController');
-
-
-
-
-
-Route::resource('inmueble/tipo_inmueble', 'tipo_inmuebleController');
-
-
-
-
-
-
-
+Route::resource('tipo_inmueble', 'tipo_inmuebleController');
 Route::post('filtroInmueble/{id}', 'InmuebleController@filtroInmuebles');
+Route::post('filtroInmueblesTipo/{id}','InmuebleController@filtroInmueblesTipo');
 
 Route::resource('torre', 'TorreController');
 

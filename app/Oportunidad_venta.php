@@ -23,7 +23,7 @@ class Oportunidad_venta extends Model
      */
     public function inmueble_id()
     {
-        return $this->belongsTo('App\Obras','inmueble_id');
+        return $this->belongsTo('App\Inmueble','inmueble_id');
     }
 
     /**
