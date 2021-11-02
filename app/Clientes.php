@@ -8,6 +8,10 @@ class Clientes extends Model
 {
     protected $table = 'clientes';
 
+
+
+
+
     public function productos(){
         return $this->hasMany('App\Producto');
     }

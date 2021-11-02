@@ -11,7 +11,7 @@ class TorreController extends Controller
 
     public function __construct()
     {
-        $this->middleware('api.auth', ['except' => ['']]);
+        $this->middleware('api.auth', ['except' => ['filterProyectoId']]);
     }
 
     /**
@@ -53,6 +53,7 @@ class TorreController extends Controller
     {
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
+
 
         if (!empty($params_array)) {
 
@@ -250,6 +251,23 @@ class TorreController extends Controller
                 'mensaje' => 'No existe ese elemento'
             ];
         }
+
+        return response()->json($data, $data['code']);
+    }
+
+    public function filterProyectoId($id)
+    {
+        $dt = Torre::where('id_proyecto', $id)->get();
+
+
+        $data = [
+
+            'code'      => 200,
+            'status'    => 'success',
+
+            'data'      =>  $dt
+
+        ];
 
         return response()->json($data, $data['code']);
     }

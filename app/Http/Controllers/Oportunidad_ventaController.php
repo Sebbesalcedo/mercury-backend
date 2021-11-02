@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Oportunidad_venta;
+use App\Clientes;
+use App\Inmueble;
+use Illuminate\Foundation\Console\Presets\React;
 
 class Oportunidad_ventaController extends Controller
 {
     public function __construct()
     {
 
-        $this->middleware('api.auth', ['except' => []]);
+        $this->middleware('api.auth', ['except' => ['mostrarInformacion']]);
     }
     public function index()
     {
 
 
-        $data = Oportunidad_venta::all()->load('cliente_id', 'inmueble_id', 'estado_id');
+        $data = Oportunidad_venta::all();
 
 
         return response()->json([
@@ -30,7 +33,10 @@ class Oportunidad_ventaController extends Controller
 
     public function show($id)
     {
-        $data = Oportunidad_venta::find($id);
+        $data = Oportunidad_venta::find($id)->load('cliente_id', 'inmueble_id', 'estado_id');
+
+
+
         if (is_object($data)) {
 
             $data = array(
@@ -89,8 +95,9 @@ class Oportunidad_ventaController extends Controller
             } else {
 
                 $dt = new Oportunidad_venta();
+
                 $dt->cliente_id   = $params_array['cliente_id'];
-                $dt->inmueble_id      = $params_array['inmueble_id'];
+                $dt->inmueble_id  = $params_array['inmueble_id'];
                 $dt->id_user      = $params_array['id_user'];
                 $dt->cantidad     = $params_array['cantidad'];
                 $dt->valor_compra = $params_array['valor_compra'];
@@ -154,7 +161,7 @@ class Oportunidad_ventaController extends Controller
             }
             unset($params_array['id']);
             unset($params_array['cliente_id']);
-             unset($params_array['id_user']);
+            unset($params_array['id_user']);
             unset($params_array['created_at']);
 
             $dt = Oportunidad_Venta::where('id', $id);
@@ -207,5 +214,49 @@ class Oportunidad_ventaController extends Controller
             ];
         }
         return response()->json($data, $data['code']);
+    }
+
+    public function FiltroDisponibles(Request $request)
+    {
+
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+
+        $data = Inmueble::where('Estado_Unidad', $params_array['peticion'])->get();
+
+
+        return response()->json([
+
+            'code'      => 200,
+            'status'    => 'success',
+            'data'      => $data
+
+        ]);
+    }
+
+
+
+    /**
+     * Mostrar los datos de una oportunidad de venta
+     */
+
+    public function mostrarInformacion(Request $request)
+    {
+
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        $inmueble = Inmueble::where('id_unidad',  $params_array['unidad'])->get();
+        $cliente = Clientes::where('id',  $params_array['cliente'])->get();
+
+        return response()->json([
+
+            'code'      => 200,
+            'status'    => 'success',
+            'inmueble'  => $inmueble,
+            'cliente'   => $cliente
+
+        ]);
     }
 }

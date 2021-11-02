@@ -16,17 +16,26 @@ use \App\Http\Middleware\ApiAuthMiddleware;
 use GuzzleHttp\Middleware;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
+Route::get('/','MailController@getMail');
 
+Route::get('enviarCorreo', 'MailController@enviarCorreo');
 //--------------------------------
 //Rutas  del modulo de inventario
 //--------------------------------
 
 Route::resource('proveedor', 'proveedoresController');
-Route::resource('producto', 'productoController');
+Route::resource('producto', 'MateriaController');
+
+Route::get('MaterialeFitro', 'MateriaController@filtroMaterial');
+Route::get('MaterialFitroNombre/{nombre}', 'MateriaController@filtroMaterialNombre');
+Route::get('MaterialFitroInteligente/{nombre}/{marca}', 'MateriaController@filtroMaterialEconomico');
+
+
+
 
 
 Route::resource('estados/proyecto', 'estadoProyectoController');
@@ -37,12 +46,19 @@ Route::resource('proyectos', 'proyectoController');
 //-------------------------------
 
 
+Route::get('sendbasicemail','MailController@basic_email');
+Route::get('sendhtmlemail','MailController@html_email');
+Route::get('attachment_email','MailController@attachment_email');
+
+
 Route::resource('inmueble', 'InmuebleController');
 Route::resource('tipo_inmueble', 'tipo_inmuebleController');
 Route::post('filtroInmueble/{id}', 'InmuebleController@filtroInmuebles');
 Route::post('filtroInmueblesTipo/{id}','InmuebleController@filtroInmueblesTipo');
 
 Route::resource('torre', 'TorreController');
+
+Route::post('inmueblesDisponibles/{id}','InmuebleController@inmueblesDisponibles');
 
 //--------------------------------------------------------------------
 
@@ -60,6 +76,8 @@ Route::resource('estado/oportunidad', 'Estado_OpController');
 // Rutas del controlador de cliente
 Route::resource('cliente', 'ClientesController');
 
+Route::post('mostrarInformacion','Oportunidad_ventaController@mostrarInformacion');
+
 // rutas del controlador de tareas
 Route::resource('tareas', 'TareasController');
 Route::resource('estado/tarea', 'Estado_tareaController');
@@ -72,6 +90,24 @@ Route::resource('nivelEstudios', 'nivelEstudiosController');
 
 //--------------------------------------------------------------------
 //Rutas  del modulo de cotizaciones
+//--------------------------------------------------------------------
+
+
+//--------------------------------------------------------------------
+//Rutas  del controlador de ordenes de compra
+//--------------------------------------------------------------------
+
+
+Route::resource('ordenesCompra', 'ordenesCompraController');
+Route::get('generateReferencia', 'ordenesCompraController@generateReference');
+Route::get('FiltroGerencia', 'ordenesCompraController@FiltroGerente');
+Route::put('revisarGerente/{id}', 'ordenesCompraController@revisionGerente');
+
+
+
+
+//--------------------------------------------------------------------
+//Rutas  del de cotizaciones
 //--------------------------------------------------------------------
 
 
@@ -106,3 +142,13 @@ Route::post('usuario/upload', 'UserController@upload')->middleware(ApiAuthMiddle
 Route::get('usuario/avatar/{filename}', 'UserController@getImage');
 Route::get('usuario/detail/{id}', 'UserController@detail');
 Route::delete('users/{id}','UserController@delete');
+
+// Ciudades
+
+
+
+Route::resource('ciudades', 'ciudad_departamentoController');
+
+Route::get('filtroCiudad/{id}','ciudad_departamentoController@filtroCiudad');
+Route::post('FiltroDisponibles','Oportunidad_ventaController@FiltroDisponibles');
+Route::post('filterProyectoId/{id}','TorreController@filterProyectoId');

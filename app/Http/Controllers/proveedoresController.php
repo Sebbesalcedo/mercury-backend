@@ -69,9 +69,9 @@ class proveedoresController extends Controller
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
 
-     
 
-        //COMPROBAR SI EL USUARIO ESTA IDENTIFICADO  
+
+        //COMPROBAR SI EL USUARIO ESTA IDENTIFICADO
 
         $token = $request->header('Authorization');
         $jwtAuth = new \JwtAuth();
@@ -154,14 +154,14 @@ class proveedoresController extends Controller
         if (!empty($params_array)) {
 
             //Validar los datos
-            $validate = \Validator ::make($params_array,[
+            $validate = \Validator::make($params_array,[
 
                 'nombre'=>'required|unique:proveedores',
             ]);
 
             // Quitar lo que no quiero actualizar
             unset($params_array['id']);
-                
+
             unset($params_array['created_at']);
 
             //Actualizar el registro

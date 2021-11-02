@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Inmueble;
 use Illuminate\Database\Eloquent\Collection;
+use PhpParser\Node\Expr\Print_;
 
 class InmuebleController extends Controller
 {
     public function __construct()
     {
 
-        $this->middleware('api.auth', ['except' => ['filtroInmuebles', 'filtroInmueblesTipo']]);
+        $this->middleware('api.auth', ['except' => ['filtroInmuebles', 'filtroInmueblesTipo','inmueblesDisponibles']]);
     }
 
 
@@ -67,16 +68,15 @@ class InmuebleController extends Controller
 
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
-
+        $cantidadRegistros=Inmueble::all()->count();
 
         if (!empty($params_array)) {
 
             $validate =  \Validator::make($params_array, [
 
-                'id_proyecto'               => 'required',
-                'id_tipo_inmueble'     => 'required',
-                'id_user'               => 'required',
-                'valor_unitario'  => 'required',
+                'Proyecto_ID'         => 'required',
+                'User_ID'             => 'required',
+                'Valor_Total_Unidad'  => 'required'
 
             ]);
             if ($validate->fails()) {
@@ -92,18 +92,27 @@ class InmuebleController extends Controller
             } else {
 
                 $dt = new Inmueble();
+                $suma=$cantidadRegistros+4;
+                $generateID="IN-".$suma;
 
-                $dt->id_proyecto        =   $params_array['id_proyecto'];
-                $dt->id_tipo_inmueble   =   $params_array['id_tipo_inmueble'];
-                $dt->id_user            =   $params_array['id_user'];
-                $dt->id_torre           =   $params_array['id_torre'];
-                $dt->dimensiones        =   $params_array['dimensiones'];
-                $dt->habitaciones       =   $params_array['habitaciones'];
-                $dt->banos              =   $params_array['banos'];
-                $dt->parqueadero        =   $params_array['parqueadero'];
-                $dt->cantidad           =   $params_array['cantidad'];
-                $dt->valor_unitario     =   $params_array['valor_unitario'];
-                $dt->descripcion        =   $params_array['descripcion'];
+                $dt->id_unidad              = $generateID;
+                $dt->Torre_ID                   = $params_array['Torre_ID'];
+                $dt->Proyecto_ID                = $params_array['Proyecto_ID'];
+                $dt->Unidad                     = $params_array['Unidad'];
+                $dt->Nomenclatura_Unidad        = $params_array['Nomenclatura_Unidad'];
+                $dt->Area_Habitable_M2          = $params_array['Area_Habitable_M2'];
+                $dt->Area_Extension_M2          = $params_array['Area_Extension_M2'];
+                $dt->Tipo_Extension             = $params_array['Tipo_Extension'];
+                $dt->Area_Total_M2              = $params_array['Area_Total_M2'];
+                $dt->No_Parqueaderos            = $params_array['No_Parqueaderos'];
+                $dt->Parque_Descr               = $params_array['Parque_Descr'];
+                $dt->Bodega_Deposito_M2         = $params_array['Bodega_Deposito_M2'];
+                $dt->Tipo_Inmueble              = $params_array['Tipo_Inmueble'];
+                $dt->Estado_Unidad              = $params_array['Estado_Unidad'];
+                $dt->Valor_Parqueadero          = $params_array['Valor_Parqueadero'];
+                $dt->Valor_Deposito             = $params_array['Valor_Deposito'];
+                $dt->Valor_Total_Unidad         = $params_array['Valor_Total_Unidad'];
+                $dt->User_ID                    = $params_array['User_ID'];
 
                 $dt->save();
 
@@ -245,4 +254,20 @@ class InmuebleController extends Controller
 
         ]);
     }
+
+     /**
+     * Método que nos sirve para consultar los inmuebles disponibles
+     * Filtrado por proyecto
+     */
+
+    public function inmueblesDisponibles($proyecto_id)
+    {
+        $variable='Disponible';
+
+        $sql = Inmueble::where('Proyecto_ID',$proyecto_id)->where('Estado_Unidad',$variable)->get();
+
+        return response()->json($sql);
+    }
+
 }
+

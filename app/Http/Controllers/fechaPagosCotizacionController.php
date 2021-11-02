@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\fechaPagosCotizacion;
+
 class fechaPagosCotizacionController extends Controller
 {
 
@@ -19,7 +20,7 @@ class fechaPagosCotizacionController extends Controller
      */
     public function index()
     {
-        $data =fechaPagosCotizacion::all()->load('id_cotizacion');
+        $data = fechaPagosCotizacion::all();
 
         return response()->json([
 
@@ -28,7 +29,6 @@ class fechaPagosCotizacionController extends Controller
             'data' => $data
 
         ]);
-
     }
 
     /**
@@ -52,14 +52,14 @@ class fechaPagosCotizacionController extends Controller
         $json = $request->input('json', null);
         $params = json_decode($json);
         $params_array = json_decode($json, true);
-
-        if(!empty($params_array)){
+        $cantidadRegistros=fechaPagosCotizacion::all()->count();
+        if (!empty($params_array)) {
 
 
             $validate = \Validator::make($params_array, [
 
-                'id_cotizacion'    =>  'required',
-                'fecha_pagos'       =>  'required'
+                'Cotizacion_id'    =>  'required'
+
             ]);
 
             if ($validate->fails()) {
@@ -72,29 +72,33 @@ class fechaPagosCotizacionController extends Controller
                     'error' =>   $validate->errors()
 
                 ];
-            }else{
+            } else {
 
                 $dt = new fechaPagosCotizacion();
-                $dt -> id_cotizacion  = $params_array['id_cotizacion'];
-                $dt -> fecha_pagos    = $params_array['fecha_pagos'];
-                $dt -> estado_id      = $params_array['estado_id'];
-                $dt -> id_user        = $params_array['id_user'];
-                
-                $dt -> save();
-                
-                $data =[
+                $suma=$cantidadRegistros+4;
+                $generateID="IN-".$suma;
+                $dt->Pagos_Cot_id  = $generateID;
+                $dt->Cotizacion_id = $params_array['Cotizacion_id'];
+                $dt->Numero_Cuota  = $params_array['Numero_Cuota'];
+                $dt->Fecha_Cuota  = $params_array['Fecha_Cuota'];
+                $dt->Valor_Cuota  = $params_array['Valor_Cuota'];
 
-                        'code'    => 200,
-                        'status'  => 'success',
-                        'mensaje' => 'Se ha guardado el dato!!',
-                        'data'    => $params_array
+
+
+                $dt->User_ID        = $params_array['User_ID'];
+
+                $dt->save();
+
+                $data = [
+
+                    'code'    => 200,
+                    'status'  => 'success',
+                    'mensaje' => 'Se ha guardado el dato!!',
+                    'data'    => $params_array
 
                 ];
-
-            }   
-
-
-        }else{
+            }
+        } else {
 
             $data = array(
                 'code' => 400,
@@ -102,7 +106,6 @@ class fechaPagosCotizacionController extends Controller
                 'mensaje' => 'Los datos enviados no son los correctos.',
                 'data' => $params_array
             );
-
         }
         return response()->json($data, $data['code']);
     }
@@ -116,7 +119,7 @@ class fechaPagosCotizacionController extends Controller
     public function show($id)
     {
         $data = fechaPagosCotizacion::find($id);
-        if(is_object($data)){
+        if (is_object($data)) {
 
             $data = array(
 
@@ -125,8 +128,7 @@ class fechaPagosCotizacionController extends Controller
                 'data' => $data
 
             );
-
-        }else{
+        } else {
 
             $data = array(
 
@@ -135,7 +137,6 @@ class fechaPagosCotizacionController extends Controller
                 'mensaje' => 'dato no existente'
 
             );
-
         }
         return response()->json($data, $data['code']);
     }
@@ -160,22 +161,22 @@ class fechaPagosCotizacionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $json = $request ->input ('json',null);
-        $params_array  = json_decode($json,true);
-        
-        if(!empty($params_array)){
+        $json = $request->input('json', null);
+        $params_array  = json_decode($json, true);
 
-            $validate =\Validator::make($params_array,[
+        if (!empty($params_array)) {
+
+            $validate = \Validator::make($params_array, [
 
                 'id_cotizacion' => 'required',
                 'fecha_pagos'   => 'required',
-                'estado_id'     => 'required',
+
                 'id_user'       => 'required'
- 
+
             ]);
 
 
-            if($validate->fails()){
+            if ($validate->fails()) {
 
                 $data = [
                     'code' => 400,
@@ -184,21 +185,20 @@ class fechaPagosCotizacionController extends Controller
                     'post' => $validate->errors()
                 ];
                 return response()->json($data, $data['code']);
-
             }
 
             unset($params_array['id']);
             unset($params_array['id_cotizacion']);
-            
+
             unset($params_array['created_at']);
 
-            $dt = fechaPagosCotizacion::where('id',$id);
+            $dt = fechaPagosCotizacion::where('id', $id);
 
-            if(!empty($dt) && is_object($dt)){
+            if (!empty($dt) && is_object($dt)) {
 
-                $dt ->update($params_array);
+                $dt->update($params_array);
 
-                $data =[ 
+                $data = [
 
                     'code' => 200,
                     'status' => 'success',
@@ -207,8 +207,7 @@ class fechaPagosCotizacionController extends Controller
                     'changes' => $params_array
 
                 ];
-
-            }else{
+            } else {
 
                 $data = [
                     'code' => 400,
@@ -216,13 +215,10 @@ class fechaPagosCotizacionController extends Controller
                     'message' => 'Datos enviados incorrectamente',
                     'post' => $params_array
                 ];
-
             }
-
         }
 
         return response()->json($data, $data['code']);
-    
     }
 
     /**
@@ -235,9 +231,9 @@ class fechaPagosCotizacionController extends Controller
     {
         $dt = fechaPagosCotizacion::find($id);
 
-        if(!empty($dt)){
+        if (!empty($dt)) {
 
-            $dt ->delete();
+            $dt->delete();
             $data = [
 
                 'code'      => 200,
@@ -246,15 +242,13 @@ class fechaPagosCotizacionController extends Controller
                 'data'      => $dt
 
             ];
-
-        }else{
+        } else {
 
             $data = [
                 'code' => 404,
                 'status' => 'error',
                 'mensaje' => 'No existe ese elemento'
             ];
-
         }
         return response()->json($data, $data['code']);
     }

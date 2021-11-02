@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\proyecto;
+use App\proyectos;
 
 class proyectoController extends Controller
 {
@@ -20,7 +20,7 @@ class proyectoController extends Controller
      */
     public function index()
     {
-        $data = proyecto::all()->load('id_estado','id_user');
+        $data = proyectos::get();
 
         return response()->json([
 
@@ -51,15 +51,25 @@ class proyectoController extends Controller
     {
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
+        $cantidadRegistros=proyectos::all()->count();
 
         if (!empty($params_array)) {
 
             $validate = \Validator::make($params_array, [
 
-                'nombre'    => 'required',
-                'id_user'   => 'required',
-                'id_estado' => 'required',
-                'direccion' => 'required'
+
+
+                'Project_Name'          => 'required|unique:t_proyecto',
+                'Estado_Proyecto'       => 'required',
+                'Tipo_Proyecto'         => 'required',
+                'Fecha_Inicio_Projecto' => 'required',
+                'Fecha_Fin_Projecto'    => 'required',
+                'Departamento'          => 'required',
+                'Ciudad'                => 'required',
+                'Direccion'             => 'required',
+
+                'User_ID'               => 'required'
+
             ]);
 
             if ($validate->fails()) {
@@ -76,15 +86,25 @@ class proyectoController extends Controller
                 return response()->json($data, $data['code']);
             } else {
 
-                $dt = new proyecto();
+                $dt = new proyectos();
 
-                $dt->nombre               = $params_array['nombre'];
-                $dt->id_user              = $params_array['id_user'];
-                $dt->id_estado            = $params_array['id_estado'];
-                $dt->fecha_inicio         = $params_array['fecha_inicio'];
-                $dt->fecha_finalizacion   = $params_array['fecha_finalizacion'];
-                $dt->direccion            = $params_array['direccion'];
-                $dt->descripcion          = $params_array['descripcion'];
+
+                $suma=$cantidadRegistros+4;
+                $generateID="PO-".$suma;
+
+                $dt->Proyecto_ID             = $generateID;
+                $dt->Project_Name               = $params_array['Project_Name'];
+                $dt->Estado_Proyecto            = $params_array['Estado_Proyecto'];
+                $dt->Tipo_Proyecto              = $params_array['Tipo_Proyecto'];
+                $dt->Fecha_Inicio_Projecto      = $params_array['Fecha_Inicio_Projecto'];
+                $dt->Fecha_Fin_Projecto         = $params_array['Fecha_Fin_Projecto'];
+                $dt->Departamento               = $params_array['Departamento'];
+                $dt->Ciudad                     = $params_array['Ciudad'];
+                $dt->Direccion                  = $params_array['Direccion'];
+                $dt->Descr_Proyecto             = $params_array['Descr_Proyecto'];
+                $dt->User_ID                    = $params_array['User_ID'];
+
+
 
                 $dt->save();
 
@@ -120,20 +140,18 @@ class proyectoController extends Controller
      */
     public function show($id)
     {
-        $data = proyecto::find($id);
+        $data = proyectos::find($id);
 
-        if(is_object($data)){
+        if (is_object($data)) {
 
-            $data = array ([
+            $data = array([
 
                 'code'   => 200,
                 'status' => 'success',
                 'data'   => $data
 
             ]);
-
-        }
-        else {
+        } else {
 
             $data = array([
 
@@ -170,56 +188,41 @@ class proyectoController extends Controller
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
 
-        if(!empty($params_array)){
+        if (!empty($params_array)) {
 
-            $validate = \Validator::make($params_array,[
+            $validate = \Validator::make($params_array, [
 
-                'nombre'    => 'required|nombre|unique:proyectos',
-                'id_user'   => 'required',
-                'id_estado' => 'required',
-                'direccion' => 'required'
-
+                'Project_Name'    => 'required|nombre|unique:t_proyecto&unidades',
             ]);
 
-            if($validate->fails()){
-
+            if ($validate->fails()) {
                 $data = [
 
                     'code' => 400,
                     'status'  => 'error',
                     'mensaje' => 'Se ha encontrado un error.',
                     'error'   => $validate->errors()
-
                 ];
-
-            }else {
-
+            } else {
                 unset($params_array['id']);
                 unset($params_array['created_at']);
 
-                $dt = nivelEstudios::where('id', $id)->update($params_array);
-
+                $dt = proyectos::where('id', $id)->update($params_array);
                 $data = [
 
                     'code'      => 200,
                     'status'    => 'success',
                     'mensaje'   => 'Dato actualizado con exito.',
                     'changes'   => $params_array
-
                 ];
             }
-
-        }else{
-
+        } else {
             $data = [
 
                 'code'      => 400,
                 'status'    => 'error',
                 'mensaje'   => 'Se presentó un error en los datos',
-
-
             ];
-
         }
 
         return response()->json($data, $data['code']);
@@ -233,9 +236,9 @@ class proyectoController extends Controller
      */
     public function destroy($id)
     {
-        $dt = proyecto::find($id);
+        $dt = proyectos::find($id);
 
-        if(!empty($dt)){
+        if (!empty($dt)) {
 
             $dt->delete();
 
@@ -247,10 +250,7 @@ class proyectoController extends Controller
                 'data'      => $dt
 
             ];
-
-
-        }
-        else {
+        } else {
 
             $data = [
                 'code' => 404,
@@ -260,4 +260,6 @@ class proyectoController extends Controller
         }
         return response()->json($data, $data['code']);
     }
+
+
 }

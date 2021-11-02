@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class cotizaciones extends Model
 {
-    protected $table = 'cotizaciones';
+    protected $table = 't_cotizaciones';
 
     public function id_cliente()
     {

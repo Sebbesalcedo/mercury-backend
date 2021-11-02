@@ -174,29 +174,33 @@ CREATE TABLE estado_cotizacion(
 
 CREATE TABLE cotizaciones(
 
-    id 				      	        int(255) AUTO_INCREMENT NOT NULL,
+    id 				      	      int(255) AUTO_INCREMENT NOT NULL,
     id_cliente		    	      int(255) NOT NULL,
-    id_user			    	        int(255) NOT NULL,
-    id_op_venta 		          int(255) NOT NULL,
-    id_estado                 int(255) NOT NULL,
+    id_user			    	      int(255) NOT NULL,
+    id_op_venta 		          int(255),
+    id_inmueble              int(255),
+
 
     cuota_congelacion         double(20,3) NOT NULL,
     pFecha_congelacion        datetime,
     porcentaje_cuota_inicial  int(50),
-    valor_separacion 	        double(20,3) NOT NULL,
-    cuota_inicial		          double(20,3) NOT NULL,
-    fecha_cuota_inicial       datetime,
-    precio_especiales         double(20,3),
-    num_cuotas			          int(50) NOT NULL,
-    valor_credito		          double(20,3) NOT NULL,
+    valor_separacion 	      double(20,3) NOT NULL,
+    cuota_inicial		      double(20,3) NOT NULL,
+    descuento                 double(20,3) NOT NULL,
+    fecha_cuota_inicial       date,
+
+    num_cuotas			      int(50) NOT NULL,
+    valor_cuota               int(50) NOT NULL,
+    valor_credito		      double(20,3) NOT NULL,
     created_at                datetime DEFAULT NULL,
     updated_at                datetime DEFAULT NULL,
 
     CONSTRAINT	pk_cotizacion PRIMARY KEY (id),
     CONSTRAINT	fk_cliente_id FOREIGN KEY (id_cliente) REFERENCES clientes(id),
     CONSTRAINT  fk_user_id  FOREIGN KEY (id_user) REFERENCES users(id),
-    CONSTRAINT	fk_id_op_venta FOREIGN KEY (id_op_venta) REFERENCES oportunidad_venta(id),
-    CONSTRAINT   fk_estado_cotizacion FOREIGN KEY (id_estado) REFERENCES  estado_cotizacion(id)
+    CONSTRAINT fk_in_inmueble FOREIGN KEY (id_inmueble) REFERENCES  inmueble(id),
+    CONSTRAINT	fk_id_op_venta FOREIGN KEY (id_op_venta) REFERENCES oportunidad_venta(id)
+
 
   )ENGINE=INNODB;
 
@@ -206,9 +210,10 @@ CREATE TABLE fecha_pagos_cotizaciones(
 
   id                int(255)  AUTO_INCREMENT NOT NULL,
   id_cotizacion     int(255) NOT NULL,
-  fecha_pagos       datetime NOT NULL,
+  fecha_pagos       datetime NOT NULL,¨
+  valor_pago        int(255) NOT NULL,
 
-  id_user			    	int(255) NOT NULL,
+  id_user		    int(255) NOT NULL,
   created_at       datetime DEFAULT NULL,
   updated_at       datetime DEFAULT NULL,
 

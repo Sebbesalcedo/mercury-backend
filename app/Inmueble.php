@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inmueble extends Model
 {
-    protected $table = 'inmueble';
+    protected $table = 't_unidades';
 
     public function users()
     {

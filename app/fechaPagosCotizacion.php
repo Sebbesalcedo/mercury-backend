@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class fechaPagosCotizacion extends Model
 {
-    protected $table = 'fecha_pagos_cotizaciones';
+    protected $table = 't_pagos_cotizaciones';
 
     public function id_cotizacion()
     {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Materia;
+use Illuminate\Support\Facades\DB;
+
 class MateriaController extends Controller
 {
     public function __construct()
@@ -17,7 +19,7 @@ class MateriaController extends Controller
     {
 
 
-        $producto = Materia::all()->load('medida_id','categoria_id','proveedor_id');
+        $producto = Materia::all()->load('medida_id', 'categoria_id', 'proveedor_id');
 
 
         return response()->json([
@@ -47,7 +49,7 @@ class MateriaController extends Controller
                 'nombre'        => 'required',
                 'cantidad'      => 'required',
                 'precio_compra' => 'required',
-                'user'       =>'required',
+                'user'          => 'required',
                 'categoria_id'  => 'required',
                 'medida_id'     => 'required',
                 'proveedor_id'  => 'required'
@@ -69,12 +71,14 @@ class MateriaController extends Controller
                 $dt = new Materia();
 
                 $dt->nombre         = $params_array['nombre'];
+                $dt->Marca         = $params_array['marca'];
+
                 $dt->cantidad    = $params_array['cantidad'];
                 $dt->precio_compra  = $params_array['precio_compra'];
                 $dt->categoria_id   = $params_array['categoria_id'];
                 $dt->medida_id      = $params_array['medida_id'];
                 $dt->proveedor_id   = $params_array['proveedor_id'];
-                $dt->user    =$params_array['user'];
+                $dt->user    = $params_array['user'];
                 $dt->descripcion    = $params_array['descripcion'];
                 $dt->save();
 
@@ -213,4 +217,67 @@ class MateriaController extends Controller
         }
         return response()->json($data, $data['code']);
     }
+
+
+    //Metodo para generar los filtros para ordenes de compra
+
+
+    public function filtroMaterial()
+    {
+
+
+        // $data = Materia::orderBy('proveedor_id','ASC')->havingRaw('count(proveedor_id) >= ?',[1])->get()->load('medida_id','categoria_id','proveedor_id');
+
+        $data = Materia::groupBy('proveedor_id')->havingRaw('count(proveedor_id) >= ?', [1])->get()->load('medida_id', 'categoria_id', 'proveedor_id');
+
+
+
+        return response()->json([
+
+            'code'      => 200,
+            'status'    => 'success',
+            'data'      => $data
+
+        ]);
+    }
+
+
+    public function filtroMaterialNombre($id)
+    {
+
+        $data = Materia::WHERE('proveedor_id', $id)->orderBy('precio_compra', 'ASC')->get()->load('medida_id', 'categoria_id', 'proveedor_id');
+        return response()->json([
+
+            'code'      => 200,
+            'status'    => 'success',
+            'data'      => $data
+
+        ]);
+    }
+
+    public function filtroMaterialEconomico($nombre, $marca)
+    {
+        // $data = DB::select(
+
+        // 'SELECT *,
+        // min(A.precio_compra) AS precio_compra
+        // FROM `materia` AS A
+        // WHERE nombre = ? and marca = ?',
+        // [$nombre, $marca]
+
+        // );
+
+        $data = Materia::where(['nombre'=>$nombre,'Marca'=>$marca])->orderBy('precio_compra', 'asc')->first()->load('medida_id', 'categoria_id', 'proveedor_id');
+
+        return response()->json([
+
+            'code'      => 200,
+            'status'    => 'success',
+            'data'      => $data,
+
+
+        ]);
+    }
+
+  
 }

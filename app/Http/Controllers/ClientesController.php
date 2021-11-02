@@ -28,7 +28,7 @@ class ClientesController extends Controller
 
     public function show($id)
     {
-        $data = Clientes::find($id);
+        $data = Clientes::find($id)->load('tipo_iden', 'id_n_estudio');
         if (is_object($data)) {
 
             $data = array(
@@ -53,6 +53,7 @@ class ClientesController extends Controller
 
     public function store(Request $request)
     {
+
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
 

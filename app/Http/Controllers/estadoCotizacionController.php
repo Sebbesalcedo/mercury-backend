@@ -45,7 +45,7 @@ class estadoCotizacionController extends Controller
      */
     public function store(Request $request)
     {
-         $json = $request->input('json', null);
+        $json = $request->input('json', null);
         $params_array = json_decode($json, true);
 
         if(!empty($params_array)){
@@ -53,12 +53,12 @@ class estadoCotizacionController extends Controller
             $validate = \Validate::make($params_array,[
 
                     'nombre' => 'required|nombre|unique:estado_cotizacion'
-                    
+
             ]);
 
             if($validate->fails()){
 
-                $data = [ 
+                $data = [
 
                     'code'      => 400,
                     'status'    => 'error',
@@ -225,6 +225,6 @@ class estadoCotizacionController extends Controller
             ];
         }
         return response()->json($data, $data['code']);
-    
+
     }
 }
