@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class proyecto extends Model
 {
     protected $table = 't_proyecto';
+    protected $keyType = 'string';
     protected $primaryKey = 'Proyecto_ID';
-
+    public $incrementing = false;
+    public $timestamps = false;
+   
 
         public function Departamento()
         {
@@ -22,17 +25,7 @@ class proyecto extends Model
         }
 
 
-
-
-
-
-
-
-
-
     // ────────────────────────────────────────────────────────────────────────────────
-
-
 
 
     /**

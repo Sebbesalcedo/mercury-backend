@@ -39,7 +39,19 @@ Route::get('MaterialFitroInteligente/{nombre}/{marca}', 'MateriaController@filtr
 
 
 Route::resource('estados/proyecto', 'estadoProyectoController');
+
+
+
+
+
+
+
+
+
 Route::resource('proyectos', 'proyectoController');
+
+
+
 
 //-------------------------------
 //inventario inmueble
@@ -99,6 +111,8 @@ Route::resource('nivelEstudios', 'nivelEstudiosController');
 
 
 Route::resource('ordenesCompra', 'ordenesCompraController');
+Route::post('replicarData', 'ordenesCompraController@replicarData');
+
 Route::get('generateReferencia', 'ordenesCompraController@generateReference');
 Route::get('FiltroGerencia', 'ordenesCompraController@FiltroGerente');
 Route::put('revisarGerente/{id}', 'ordenesCompraController@revisionGerente');

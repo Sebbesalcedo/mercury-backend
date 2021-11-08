@@ -19,7 +19,7 @@ class cotizacionesController extends Controller
      */
     public function index()
     {
-        $data = cotizaciones::all();
+        $data = cotizaciones::all()->load('id_cliente');
         return response()->json([
 
             'code'      => 200,

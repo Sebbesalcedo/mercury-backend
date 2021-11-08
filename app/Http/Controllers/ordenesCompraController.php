@@ -177,7 +177,56 @@ class ordenesCompraController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+         //recoger los datos que vengan por post
+
+         $json = $request->input('json', null);
+         $params_array = json_decode($json, true);
+ 
+         if (!empty($params_array)) {
+ 
+             $validate = \Validator::make($params_array, [
+ 
+                'Material_Name'         => 'required',
+                'No_Documento_Prov'     => 'required'
+ 
+             ]);
+ 
+             if ($validate->fails()) {
+                 $data = [
+ 
+                     'code'      => 400,
+                     'status'    => 'error',
+                     'mensaje'   => 'Se ha encontrado un error',
+                     'error'   => $validate->errors()
+ 
+                 ];
+             } else {
+                 unset($params_array['No_Orden']);
+                 unset($params_array['created_at']);
+
+
+ 
+                 $dt = ordenesCompra::where('No_Orden', $id)->update($params_array);
+                 $data = [
+ 
+                     'code'      => 200,
+                     'status'    => 'success',
+                     'mensaje'   => 'Se ha actualizado correctamente el dato',
+                     'changes'   => $params_array
+ 
+                 ];
+             }
+         } else {
+             $data = [
+ 
+                 'code'      => 400,
+                 'status'    => 'error',
+                 'mensaje'   => 'No se ha enviado ningún dato',
+ 
+ 
+             ];
+         }
+         return response()->json($data, $data['code']);
     }
 
     /**
@@ -305,6 +354,91 @@ class ordenesCompraController extends Controller
                     'post' => $params_array
                 ];
             }
+        }
+        return response()->json($data, $data['code']);
+    }
+
+
+    public function replicarData(Request $request)
+    {
+           
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        var_dump($params_array);
+        if (!empty($params_array)) {
+
+            $validate =  \Validator::make($params_array, [
+
+                'Material_Name'         => 'required',
+                'No_Documento_Prov'     => 'required',
+
+
+            ]);
+            if ($validate->fails()) {
+
+                $data = [
+
+                    'code' => 400,
+                    'status' => 'error',
+                    'mensaje' => 'No se ha podido guardar el dato',
+                    'error' =>   $validate->errors()
+
+                ];
+            } else {
+
+                
+                $timestamp = time();
+                $date = gmdate("Y-m-d\TH:i:s\Z", $timestamp);
+                $fecha = Carbon::parse($date);
+                $mfecha = $fecha->month;
+                $dfecha = $fecha->day;
+                $afecha = $fecha->year;
+        
+                       
+        
+        
+        
+                $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'; 
+                $reference = 'OD'. substr(str_shuffle($permitted_chars), 0,7) . $mfecha . $dfecha . $afecha;
+
+
+
+
+                $dt = new ordenesCompra();
+
+
+
+              
+                $dt->No_Orden                    =  $reference;
+               
+                $dt->Material_Name               = $params_array['Material_Name'];
+                $dt->Marca                       = $params_array['Marca'];
+                $dt->No_Documento_Prov           = $params_array['No_Documento_Prov'];
+                $dt->Proveedor_Name              = $params_array['Proveedor_Name'];
+                $dt->Estado_Gerente              =$params_array['Estado_Gerente'];
+                $dt->Precio_Unitario             = $params_array['Precio_Unitario'];
+                $dt->Cantidad_Material           = $params_array['Cantidad_Material'];
+                $dt->Medida                      = $params_array['Medida'];
+              
+                $dt->User_ID                     = $params_array['User_ID'];
+
+
+                $dt->save();
+
+                $data = [
+                    'code' => 200,
+                    'status' => 'success',
+                    'message' => 'Creado la orden de compra',
+                    'orden' => $dt
+                ];
+            }
+        } else {
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'Datos erroneos'
+            ];
         }
         return response()->json($data, $data['code']);
     }

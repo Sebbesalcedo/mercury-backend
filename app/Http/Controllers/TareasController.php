@@ -15,12 +15,12 @@ class TareasController extends Controller
 
     public function index()
     {
-        $data = Tareas::all()->load('id_estado','cliente','id_user');
+        $data = Tareas::all();
         return response()->json([
 
             'code'      => 200,
             'status'    => 'success',
-            'data' => $data
+            'data'      => $data
 
         ]);
     }
@@ -32,18 +32,18 @@ class TareasController extends Controller
 
             $data = array(
 
-                'code' => 200,
-                'status' => 'success',
-                'data' => $data
+                'code'      => 200,
+                'status'    => 'success',
+                'data'      => $data
 
             );
         } else {
 
             $data = array(
 
-                'code' => 400,
-                'status' => 'error',
-                'mensaje' => 'dato no existente'
+                'code'      => 400,
+                'status'    => 'error',
+                'mensaje'   => 'dato no existente'
 
             );
         }
@@ -59,10 +59,10 @@ class TareasController extends Controller
 
             $validate = \Validator::make($params_array, [
 
-                'tarea' => 'required',
-                'fecha_recordatorio' => 'required',
-                'id_user' => 'required',
-                'id_estado' => 'required'
+                'Tarea_Descr'           => 'required',
+                'Fecha_Recordatorio'    => 'required',
+                'Estado_Tarea'          => 'required',
+                'User_ID'               => 'required'
 
             ]);
             if ($validate->fails()) {
@@ -81,10 +81,10 @@ class TareasController extends Controller
                 $dt = new Tareas();
 
 
-                $dt->tarea              = $params_array['tarea'];
-                $dt->fecha_recordatorio = $params_array['fecha_recordatorio'];
-                $dt->id_user            = $params_array['id_user'];
-                $dt->id_estado          = $params_array['id_estado'];
+                $dt->Tarea_Descr          = $params_array['Tarea_Descr'];
+                $dt->Fecha_Recordatorio   = $params_array['Fecha_Recordatorio'];
+                $dt->Estado_Tarea         = $params_array['Estado_Tarea'];
+                $dt->User_ID              = $params_array['User_ID'];
 
                 $dt->save();
 
@@ -93,7 +93,7 @@ class TareasController extends Controller
                     'code'      => 200,
                     'status'    => 'success',
                     'mensaje'   => 'Se ha guardado correctamente el dato',
-                    'data'      => $dt->nombre
+                    'data'      => $dt
 
                 ];
             }
@@ -120,9 +120,10 @@ class TareasController extends Controller
 
             $validate = \Validator::make($params_array, [
 
-                'tarea' => 'required',
-                'fecha_recordatorio' => 'required',
-                'id_estado' =>   'required'
+                'Tarea_Descr'           => 'required',
+                'Fecha_Recordatorio'    => 'required',
+                'Estado_Tarea'          => 'required',
+                'User_ID'               => 'required'
 
 
             ]);
@@ -137,16 +138,17 @@ class TareasController extends Controller
                 ];
             } else {
 
-                unset($params_array['id']);
-                unset($params_array['id_user']);
-                unset($params_array['created_at']);
-                $dt = Tareas::where('id', $id)->update($params_array);
+                unset($params_array['Tarea_id']);
+                unset($params_array['User_ID']);
+               
+                $dt = Tareas::where('Tarea_id', $id)->update($params_array);
                 $data = [
 
                     'code'      => 200,
                     'status'    => 'success',
                     'mensaje'   => 'Dato actualizado con éxito.',
-                    'changes'   => $params_array
+                    'data'      => $params_array,
+                    'Changes'   => $dt
 
                 ];
             }

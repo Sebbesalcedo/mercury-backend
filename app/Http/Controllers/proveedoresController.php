@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Proveedor;
+
 class proveedoresController extends Controller
 {
-        public function __construct()
+    public function __construct()
     {
 
         $this->middleware('api.auth', ['except' => []]);
@@ -19,7 +20,7 @@ class proveedoresController extends Controller
     public function index()
     {
 
-        $data = Proveedor::all()->load('tipo_iden_id','id_user');
+        $data = Proveedor::all();
 
         return response()->json([
             'code' => 200,
@@ -42,15 +43,15 @@ class proveedoresController extends Controller
 
         if (is_object($data)) {
             $dt = [
-                'code' => 200,
+                'code'   => 200,
                 'status' => 'success',
-                'data' => $data
+                'data'   => $data
             ];
         } else {
             $dt = [
-                'code' => 404,
-                'status' => 'error',
-                'mensaje' => 'La no existe el proveedor.'
+                'code'      => 404,
+                'status'    => 'error',
+                'mensaje'   => 'La no existe el proveedor.'
             ];
         }
 
@@ -58,9 +59,9 @@ class proveedoresController extends Controller
     }
 
 
-    // /**
-    //  * Metodo que nos permite agregar un nuevo proveedor
-    //  */
+    //
+    //   Metodo que nos permite agregar un nuevo proveedor
+    //  
     public function store(Request $request)
     {
 
@@ -83,13 +84,15 @@ class proveedoresController extends Controller
             //Validar los datos
             $validate = \Validator::make($params_array, [
 
-                'nombre' => 'required',
-                'tipo_iden_id' => 'required',
-                'num_identificacion' => 'required|unique:proveedores',
-                'contacto1' => 'required',
-                'id_user'   => 'required',
-                'email' => 'required|unique:proveedores',
-                'direccion' => 'required'
+                'Proveedor_Name'        => 'required',
+                'Tipo_Documento_Prov'   => 'required',
+                'No_Documento_Prov'     => 'required|unique:t_proveedores',
+                'Celular_Prov'          => 'required',
+                'Email_Prov'            => 'required|unique:t_proveedores',
+                'Ciudad'                => 'required',
+                'Direccion_Prov'        => 'required',
+                'User_ID	'           => 'required'
+                
 
 
             ]);
@@ -101,20 +104,21 @@ class proveedoresController extends Controller
                 $data = [
                     'code' => 400,
                     'status' => 'error',
-                    'mensaje' => 'No se ha guardado el proveedor no ha enviado los datos correcto o ya existe el proveedor ',
+                    'mensaje' => 'Error en los datos, por favor valida que todo este correctamente',
                     'error' => $validate->errors()
                 ];
             } else {
                 $tId = new Proveedor();
 
-                $tId->nombre =  $params_array['nombre'];
-                $tId->tipo_iden_id =  $params_array['tipo_iden_id'];
-                $tId->num_identificacion =  $params_array['num_identificacion'];
-                $tId->contacto1 =  $params_array['contacto1'];
-                $tId->contacto2 =  $params_array['contacto2'];
-                $tId->email =  $params_array['email'];
-                $tId->direccion =  $params_array['direccion'];
-                $tId->id_user = $params_array['id_user'];
+                $tId->Proveedor_Name	    =  $params_array['Proveedor_Name'];
+                $tId->Tipo_Documento_Prov   =  $params_array['Tipo_Documento_Prov'];
+                $tId->No_Documento_Prov	    =  $params_array['No_Documento_Prov	'];
+                $tId->Celular_Prov          =  $params_array['Celular_Prov'];
+                $tId->Telefono_Prov         =  $params_array['Telefono_Prov'];
+                $tId->Email_Prov	        =  $params_array['Email_Prov'];
+                $tId->Ciudad                =  $params_array['Ciudad'];
+                $tId->Direccion_Prov        =  $params_array['Direccion_Prov'];
+                $tId->User_ID               = $params_array['User_ID'];
 
                 $tId->save();
 
@@ -122,8 +126,8 @@ class proveedoresController extends Controller
                 $data = [
                     'code' => 200,
                     'status' => 'success',
-                    'mensaje' => 'Se ha guardado el nuevo proveedor',
-                    'proveedor' => $tId->nombre
+                    'mensaje' => 'Se ha Registrado el nuevo Proveedor',
+                    'proveedor' => $tId
 
                 ];
             }
@@ -132,7 +136,7 @@ class proveedoresController extends Controller
             $data = [
                 'code' => 404,
                 'status' => 'error',
-                'mensaje' => 'No has enviado ningun dato'
+                'mensaje' => 'Error en el envio de los datos.'
 
             ];
         }
@@ -154,23 +158,28 @@ class proveedoresController extends Controller
         if (!empty($params_array)) {
 
             //Validar los datos
-            $validate = \Validator::make($params_array,[
+            $validate = \Validator::make($params_array, [
 
-                'nombre'=>'required|unique:proveedores',
+                'Proveedor_Name'        => 'required',
+                'Tipo_Documento_Prov'   => 'required',
+                'No_Documento_Prov'     => 'required|unique:t_proveedores',
+                'Celular_Prov'          => 'required',
+                'Email_Prov'            => 'required|unique:t_proveedores',
+                'Ciudad'                => 'required',
+                'Direccion_Prov'        => 'required',
             ]);
 
             // Quitar lo que no quiero actualizar
-            unset($params_array['id']);
+            
 
-            unset($params_array['created_at']);
 
             //Actualizar el registro
-            $tId = Proveedor::where('id',$id)->update($params_array);
+            $tId = Proveedor::where('No_Documento_Prov', $id)->update($params_array);
             $data = [
                 'code' => 200,
                 'status' => 'success',
-                'mensaje' => 'Se ha actualizado el tipo de identificación',
-                'changes' =>$params_array
+                'mensaje' => 'Se ha realizado con exito la actualización de los datos.',
+                'changes' => $params_array
 
             ];
         } else {
@@ -188,21 +197,21 @@ class proveedoresController extends Controller
     }
     public function destroy($id, Request $request)
     {
-        $proveedor = Proveedor::where('id', $id)->first();
+        $proveedor = Proveedor::where('No_Documento_Prov', $id)->first();
 
         if (!empty($proveedor)) {
             $proveedor->delete();
             $data = [
                 'code' => 200,
                 'status' => 'success',
-                'mensaje' => 'Dato eliminado correctamente'
+                'mensaje' => 'Se ha eliminado con Exito el Proveedor '
             ];
         } else {
 
             $data = [
                 'code' => 404,
                 'status' => 'error',
-                'mensaje' => 'Hubo un error al eliminar el dato'
+                'mensaje' => 'Se presento un error al eliminar el Proveedor'
             ];
         }
         return response()->json($data, $data['code']);

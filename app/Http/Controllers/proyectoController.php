@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\proyectos;
+use Illuminate\Support\Facades\DB;
 
 class proyectoController extends Controller
 {
@@ -21,7 +22,7 @@ class proyectoController extends Controller
     public function index()
     {
         $data = proyectos::get();
-
+   
         return response()->json([
 
             'code'  => 200,
@@ -236,10 +237,30 @@ class proyectoController extends Controller
      */
     public function destroy($id)
     {
-        $dt = proyectos::find($id);
 
+        var_dump($id);
+        exit;
+         $dt = proyectos::find($id);
+        // $dt = DB::select(
+
+        // 'SELECT *
+        // FROM `materia` t_proyecto
+        // WHERE 	Proyecto_ID  = ? ',
+        // [$id]
+
+        // );
         if (!empty($dt)) {
 
+
+
+
+
+                // $dt = DB::select(
+
+                //     'DELETE FROM t_proyecto WHERE Proyecto_ID  = ?' ,
+                //     [$id]
+
+                // );
             $dt->delete();
 
             $data = [

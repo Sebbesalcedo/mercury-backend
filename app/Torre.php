@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Torre extends Model
 {
     protected $table = 't_torre';
-
+    protected $primaryKey = 'PRIMARY';
 
     public function id_proyecto()
     {

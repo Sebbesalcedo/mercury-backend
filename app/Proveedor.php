@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proveedor extends Model
 {
-    protected $table = 'proveedores';
+    protected $table = 't_proveedores';
+    protected $primaryKey = 'No_Documento_Prov';
+    public $timestamps = false;
 
     public function tipo_iden_id()
     {

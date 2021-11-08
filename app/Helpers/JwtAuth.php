@@ -17,13 +17,13 @@ class JwtAuth
         $this->key = "Me'r'cu!@&oFt¡";
     }
 
-    public function signUp($email, $contrasena, $getToken = null)
+    public function signUp($User_Email, $User_Contrasena, $getToken = null)
     {
 
         //Buscar si existe el usuario con sus credenciales Email y password
         $user = User::where([
-            'email' => $email,
-            'contrasena' => $contrasena
+            'User_Email' => $User_Email,
+            'User_Contrasena' => $User_Contrasena
         ])->first();
         //Comprobar si son correctos
         $signup = false;

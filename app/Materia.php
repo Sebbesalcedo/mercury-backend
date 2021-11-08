@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Materia extends Model
 {
-    protected $table = 'materia';
+    protected $table = 't_materiales';
 
     public function  medida_id()
     {

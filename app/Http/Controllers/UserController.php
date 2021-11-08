@@ -8,320 +8,311 @@ use App\User;
 
 class UserController extends Controller
 {
-    public function pruebas(Request $request)
-    {
-         return "Controlador de usuario";
-    }
 
-    public function index()
+     public function index()
      {
 
-         $user = User::all()->load('perfil_id');
- 
-         return response()->json([
-                     'code' => 200,
-                     'status' => 'success',
-                     'users' => $user
-         ]);
+          $user = User::all();
+
+          return response()->json([
+               'code' => 200,
+               'status' => 'success',
+               'users' => $user
+          ]);
      }
 
-    public function register(Request $request)
-    {
+     public function register(Request $request)
+     {
 
-         //Recoger los datos del usuario por post
+          //Recoger los datos del usuario por post
 
-         $json = $request->input('json', null);
-         $params = json_decode($json);
-         $params_array = json_decode($json, true); //array
-      
-                   //validar si no envian nada
+          $json = $request->input('json', null);
+          $params = json_decode($json);
+          $params_array = json_decode($json, true); //array
 
-         if (!empty($params_array)) {
+          //validar si no envian nada
 
+          if (!empty($params_array)) {
 
-              //Limpiar datos
-              $params_array = array_map('trim', $params_array);
 
+               //Limpiar datos
+               $params_array = array_map('trim', $params_array);
 
-              //Validar los datos
 
-              $validate = \Validator::make($params_array, [
-
-                   'nombres'      => 'required',
-                   'apellidos'    => 'required',
-                   'contrasena'   => 'required',
-                   // 'empresa_id'   => 'required',
-                   'perfil_id'    => 'required',
-                   // 'estado_id'    => 'required',
-                   //comprobar si el email esta duplicado
-                   'email'        => 'required|email|unique:users'
+               //Validar los datos
 
-              ]);
+               $validate = \Validator::make($params_array, [
 
-              if ($validate->fails()) {
+                    'User_Name'         => 'required',
+                    'User_Apellido'     => 'required',
+                    'contrasena'        => 'required',
+                    'User_Contrasena'   => 'required',
+                    'Perfil_User'       => 'required',
+                    'User_Email'        => 'required|User_Email|unique:t_users'
 
-                   $data = array(
-                        'code' => 404,
-                        'status' => 'error',
-                        'mensaje' => 'Datos del usuario erroneos.',
-                        'error' => $validate->errors()
-                   );
-              } else {
+               ]);
 
-                   //cifrado de contraseña
+               if ($validate->fails()) {
 
-                   $pwd = hash('sha256', $params->contrasena);
-                   //crear el usuario
+                    $data = array(
+                         'code' => 404,
+                         'status' => 'error',
+                         'mensaje' => 'Datos del usuario erroneos.',
+                         'error' => $validate->errors()
+                    );
+               } else {
 
-                   $user = new User();
+                    //cifrado de contraseña
 
-                   $user->nombres = $params_array['nombres'];
-                   $user->apellidos = $params_array['apellidos'];
-                   $user->contrasena = $pwd;
-                   // $user->empresa_id = $params_array['empresa_id'];
-                   $user->perfil_id = $params_array['perfil_id'];
-                   // $user->estado_id = $params_array['estado_id'];
-                   $user->email = $params_array['email'];
-                   $user->descripcion = $params_array['descripcion'];
-                  
+                    $pwd = hash('sha256', $params->contrasena);
+                    //crear el usuario
+                    $user = new User();
 
-                   //Guardar El usuario
+                    $user->User_Name         = $params_array['User_Name'];
+                    $user->User_Apellido     = $params_array['User_Apellido'];
+                    $user->User_Contrasena   = $pwd;
+                    $user->Perfil_User       = $params_array['Perfil_User'];
+                    $user->Perfil_Descr	     = $params_array['Perfil_Descr'];
+                 
+                    $user->User_Email        = $params_array['User_Email'];
+                    $user->User_Descripcion  = $params_array['User_Descripcion'];
 
-                   $user->save();
 
-                   $data = array(
-                        'code' => 200,
-                        'status' => 'success',
-                        'mensaje' => 'se ha a creado correctamente el usuario.',
-                        'usuario' => $user
-                   );
-              }
-         } else {
-              $data = array(
-                   'code' => 400,
-                   'status' => 'error',
-                   'mensaje' => 'Los datos enviados no son los correctos.',
-                   'data' => $json
-              );
-         }
+                    //Guardar El usuario
 
+                    $user->save();
 
+                    $data = array(
+                         'code' => 200,
+                         'status' => 'success',
+                         'mensaje' => 'se ha a creado correctamente el usuario.',
+                         'usuario' => $user
+                    );
+               }
+          } else {
+               $data = array(
+                    'code' => 400,
+                    'status' => 'error',
+                    'mensaje' => 'Los datos enviados no son los correctos.',
+                    'data' => $json
+               );
+          }
 
-         return response()->json($data, $data['code']);
-    }
 
-    public function login(Request $request)
-    {
-         $jwtAuth = new \JwtAuth();
 
-         //Resivir el Post
-         $json = $request->input('json', null);
-         $params = json_decode($json); //objeto
-         $params_array = json_decode($json, true); //array    
-         //Validar esos datos
-         $validate = \Validator::make($params_array, [
+          return response()->json($data, $data['code']);
+     }
 
+     public function login(Request $request)
+     {
+          $jwtAuth = new \JwtAuth();
 
-              'email'        => 'required',
-              'contrasena'   => 'required'
+          //Resivir el Post
+          $json = $request->input('json', null);
+          $params = json_decode($json); //objeto
+          $params_array = json_decode($json, true); //array    
+          //Validar esos datos
+          $validate = \Validator::make($params_array, [
 
 
+               'User_Email'        => 'required',
+               'User_Contrasena'   => 'required'
 
-         ]);
-         if ($validate->fails()) {
 
-              $signup = array(
-                   'code' => 404,
-                   'status' => 'error',
-                   'mensaje' => 'El usuario no se ha podido identificar.',
-                   'error' => $validate->errors()
-              );
-         } else {
-              //Cifrar la contraseña
-              $pwd = hash('sha256', $params->contrasena);
-              //Devolver token o datos
-              $signup = $jwtAuth->signup($params->email, $pwd);
-              if (!empty($params->gettoken)) {
-                   $signup = $jwtAuth->signup($params->email, $pwd, true);
-                   
-              }
-         }
 
+          ]);
+          if ($validate->fails()) {
 
-         return response()->json(($signup), 200);
-    }
+               $signup = array(
+                    'code' => 404,
+                    'status' => 'error',
+                    'mensaje' => 'El usuario no se ha podido identificar.',
+                    'error' => $validate->errors()
+               );
+          } else {
+               //Cifrar la contraseña
+               $pwd = hash('sha256', $params->contrasena);
+               //Devolver token o datos
+               $signup = $jwtAuth->signup($params->email, $pwd);
+               if (!empty($params->gettoken)) {
+                    $signup = $jwtAuth->signup($params->email, $pwd, true);
+               }
+          }
 
-    public function update(Request $request)
-    {
 
-         //COMPROBAR SI EL USUARIO ESTA IDENTIFICADO  
+          return response()->json(($signup), 200);
+     }
 
-         $token = $request->header('Authorization');
-         $jwtAuth = new \JwtAuth();
-         $checkToken = $jwtAuth->checkToken($token);
+     public function update(Request $request)
+     {
 
+          //COMPROBAR SI EL USUARIO ESTA IDENTIFICADO  
 
-         //recoger los datos por post
-         $json = $request->input('json', null);
-         $params_array = json_decode($json, true);
+          $token = $request->header('Authorization');
+          $jwtAuth = new \JwtAuth();
+          $checkToken = $jwtAuth->checkToken($token);
 
-         if ($checkToken && !empty($params_array)) {
 
+          //recoger los datos por post
+          $json = $request->input('json', null);
+          $params_array = json_decode($json, true);
 
+          if ($checkToken && !empty($params_array)) {
 
-              //sacar usuario identificado
 
-              $user = $jwtAuth->checkToken($token, true);
 
-              //Validar los datos
+               //sacar usuario identificado
 
-              $validate = \validator($params_array, [
+               $user = $jwtAuth->checkToken($token, true);
 
-                   'nombres'      => 'required|alpha',
-                   'apellidos'    => 'required|alpha',
-                   'contrasena'   => 'required',
+               //Validar los datos
 
+               $validate = \validator($params_array, [
 
-                   //comprobar si el email esta duplicado
-                   'email'        => 'required|email|unique:users,' . $user->sub
+                    'User_Name'       => 'required|alpha',
+                    'User_Apellido'   => 'required|alpha',
+                    'User_Contrasena' => 'required',
 
-              ]);
 
-              //quitar los campos que no quiero actualizar
+                    //comprobar si el email esta duplicado
+                    'User_Email'       => 'required|User_Email|unique:t_users,' . $user->sub
 
-              unset($params_array['id']);
-              unset($params_array['perfil_id']);
-              // unset($params_array['empresa_id']);
-              unset($params_array['created_at']);
-              unset($params_array['contrasena']);
-              unset($params_array['remember_token']);
-              //actualizar el usuario en la base de datos
+               ]);
 
-              $user_update = User::where('id', $user->sub)->update($params_array);
-              //devolver un array
+               //quitar los campos que no quiero actualizar
 
-              $data = array(
-                   'code' => 200,
-                   'status' => 'success',
-                   'mensaje' => 'Usuario actualizado.',
-                   'user' => $user,
-                   'changes' => $params_array
-              );
-         } else {
-              $data = array(
-                   'code' => 400,
-                   'status' => 'error',
-                   'mensaje' => 'El usuario no esta identificado o no has enviado ningun dato.',
-                   'data' => $params_array
-              );
-         }
-         return response()->json($data, $data['code']);
-    }
+               unset($params_array['id']);
+               unset($params_array['Perfil_User']);
+               // unset($params_array['empresa_id']);
+               unset($params_array['created_at']);
+               unset($params_array['User_Contrasena']);
+               unset($params_array['remember_token']);
+               //actualizar el usuario en la base de datos
 
-    public function upload(Request $request)
-    {
+               $user_update = User::where('id', $user->sub)->update($params_array);
+               //devolver un array
 
-         //Recoger los datos de la peticion
+               $data = array(
+                    'code' => 200,
+                    'status' => 'success',
+                    'mensaje' => 'Usuario actualizado.',
+                    'user' => $user,
+                    'changes' => $params_array
+               );
+          } else {
+               $data = array(
+                    'code' => 400,
+                    'status' => 'error',
+                    'mensaje' => 'El usuario no esta identificado o no has enviado ningun dato.',
+                    'data' => $params_array
+               );
+          }
+          return response()->json($data, $data['code']);
+     }
 
-         $image = $request->file('file0');
+     public function upload(Request $request)
+     {
 
+          //Recoger los datos de la peticion
 
-         //Validacion de la image
+          $image = $request->file('file0');
 
-         $validate = \Validator::make($request->all(), [
-              'file0' => 'required|image|mimes:jpg,jpeg,png'
-         ]);
 
-         //subir imagen y guardar la imagen
-         if (!$image || $validate->fails()) {
+          //Validacion de la image
 
-              $data = array(
-                   'code' => 400,
-                   'status' => 'error',
-                   'mensaje' => 'Error al subir imagen.',
-              );
-         } else {
+          $validate = \Validator::make($request->all(), [
+               'file0' => 'required|User_Ruta_Imagen|mimes:jpg,jpeg,png'
+          ]);
 
-              $image_name = time() . $image->getClientOriginalName();
-              \Storage::disk('users')->put($image_name, \File::get($image));
+          //subir imagen y guardar la imagen
+          if (!$image || $validate->fails()) {
 
-              $data = array(
-                   'code' => 200,
-                   'status' => 'success',
-                   'image' => $image_name
+               $data = array(
+                    'code' => 400,
+                    'status' => 'error',
+                    'mensaje' => 'Error al subir imagen.',
+               );
+          } else {
 
+               $image_name = time() . $image->getClientOriginalName();
+               \Storage::disk('users')->put($image_name, \File::get($image));
 
-              );
-         }
-         return response()->json($data, $data['code']);
-    }
+               $data = array(
+                    'code' => 200,
+                    'status' => 'success',
+                    'image' => $image_name
 
 
-    public function getImage($filename)
-    {
+               );
+          }
+          return response()->json($data, $data['code']);
+     }
 
-         $isset = \Storage::disk('users')->exists($filename);
 
-         if ($isset) {
+     public function getImage($filename)
+     {
 
-              $file = \Storage::disk('users')->get($filename);
+          $isset = \Storage::disk('users')->exists($filename);
 
-              return new  Response($file);
-         } else {
-              $data = array(
-                   'code' => 400,
-                   'status' => 'error',
-                   'mensaje' => 'No existe la imagen:' . $filename
-              );
-              return response()->json($data, $data['code']);
-         }
-    }
+          if ($isset) {
 
-    public function detail($id)
-    {
+               $file = \Storage::disk('users')->get($filename);
 
-         $user = User::find($id);
+               return new  Response($file);
+          } else {
+               $data = array(
+                    'code' => 400,
+                    'status' => 'error',
+                    'mensaje' => 'No existe la imagen:' . $filename
+               );
+               return response()->json($data, $data['code']);
+          }
+     }
 
-         if (is_object($user)) {
+     public function detail($id)
+     {
 
-              $data = array(
-                   'code' => 200,
-                   'status' => 'success',
-                   'user' => $user
-              );
-         } else {
-              $data = array(
-                   'code' => 400,
-                   'status' => 'error',
-                   'mensaje' => 'No existe el usuario.' 
-              );
-         }
-         return response()->json($data, $data['code']);
-    }
-    public function delete($id){
+          $user = User::find($id);
 
-      $dt = User::find($id);
-      if (!empty($dt)) {
+          if (is_object($user)) {
 
-          $dt->delete();
-          $data = [
+               $data = array(
+                    'code' => 200,
+                    'status' => 'success',
+                    'user' => $user
+               );
+          } else {
+               $data = array(
+                    'code' => 400,
+                    'status' => 'error',
+                    'mensaje' => 'No existe el usuario.'
+               );
+          }
+          return response()->json($data, $data['code']);
+     }
+     public function delete($id)
+     {
 
-              'code'      => 200,
-              'status'    => 'success',
-              'mensaje'   => 'Se ha eliminado el dato con exito',
-              'data'      => $dt
+          $dt = User::find($id);
+          if (!empty($dt)) {
 
-          ];
-      } else {
+               $dt->delete();
+               $data = [
 
-          $data = [
-              'code' => 404,
-              'status' => 'error',
-              'mensaje' => 'No existe ese elemento'
-          ];
-      }
-      return response()->json($data, $data['code']);
+                    'code'      => 200,
+                    'status'    => 'success',
+                    'mensaje'   => 'Se ha eliminado el dato con exito',
+                    'data'      => $dt
 
+               ];
+          } else {
 
-    }
+               $data = [
+                    'code' => 404,
+                    'status' => 'error',
+                    'mensaje' => 'No existe ese elemento'
+               ];
+          }
+          return response()->json($data, $data['code']);
+     }
 }

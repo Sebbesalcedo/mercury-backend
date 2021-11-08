@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Oportunidad_venta extends Model
 {
     protected $table = 'oportunidad_venta';
-
+    protected $primaryKey = 'Op_Venta_ID';
+    public $timestamps = false;
 
     //-----------Relaciónes de muchos a uno--------------------
 

@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tareas extends Model
 {
-    protected $table = 'tareas';
+    protected $table = 't_tareas';
+    protected $primaryKey = 'Tarea_id';
+    public $timestamps = false;
 
     public function id_user()
     {
